@@ -57,11 +57,6 @@ def office_desk(args: dict[str, Any], session_id: str | None) -> dict[str, Any]:
     action = args["action"]
     if action == "list":
         return {"folders": d.list_folders(), "workstreams": d.list_workstreams(limit=20)}
-    if action == "add_folder":
-        path = resolve_path(args["path"])
-        if not path.is_dir():
-            raise FileNotFoundError(f"{path} is not a folder")
-        return {"folder": d.add_folder(path)}
     if action == "remove_folder":
         if d.get_folder(int(args["folder_id"])) is None:
             raise NotFoundError(f"folder {args['folder_id']} not found")

@@ -9,6 +9,7 @@ tags: [office, docx, pptx, xlsx]
 # Office work on the Desk
 
 The Desk is the set of folders the user has trusted you to edit (`office_desk action=list`).
+Only the user adds Desk folders (in the plugin settings); you cannot add one.
 Writes outside a Desk folder are refused with `outside_desk`; reads work anywhere.
 
 Every edit is backed up first, written atomically, and receipted (before/after sha256, backup
@@ -34,7 +35,7 @@ Never work around a refusal: narrow the target or ask.
   `office_inspect`. `mode` for `pptx_compose_decks` is required: `adopt_theme`,
   `keep_appearance` or `bake`.
 - `xlsx_edit` preserves styles/charts/pivots; formulas are rewritten when rows/cols move.
-  After edits that formulas depend on, run `xlsx_recalc` (uses LibreOffice; reports values).
+  After edits that formulas depend on, run `xlsx_recalc` (reports values).
 - Undo anything with `office_receipt action=revert receipt_id=...`.
 
 ## Pitfalls
@@ -42,4 +43,4 @@ Never work around a refusal: narrow the target or ask.
 - Only .docx/.pptx/.xlsx (legacy .doc/.ppt/.xls and macro-enabled files are refused).
 - The same chat session reuses one workstream per folder; pass `workstream_id` when the Desk
   page created one for this request.
-- If `xlsx_recalc` reports `libreoffice_missing`, tell the user instead of editing cached values.
+- If `xlsx_recalc` reports `recalc_unavailable`, tell the user the totals were not recalculated; never edit cached values by hand.

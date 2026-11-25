@@ -5,7 +5,7 @@ from pathlib import Path
 import docx
 
 from conftest import assert_refused_unchanged, call
-from hermes_office import plugin
+from hermes_office import plugin, service
 from hermes_office.guard import sha256
 
 
@@ -77,10 +77,9 @@ def test_reverting_a_created_file_removes_it(files) -> None:
 def test_desk_actions(files, tmp_path) -> None:
     listed = call("office_desk", {"action": "list"})
     assert [f["name"] for f in listed["folders"]] == ["Client Work"]
-    added = call("office_desk", {"action": "add_folder", "path": str(tmp_path)})
-    assert added["ok"] is True
-    missing = call("office_desk", {"action": "add_folder", "path": str(tmp_path / "nope")})
-    assert missing["ok"] is False and missing["reason"] == "not_found"
+    refused = call("office_desk", {"action": "add_folder", "path": str(tmp_path)})
+    assert refused["ok"] is False
+    added = {"folder": service.desk().add_folder(tmp_path)}  # folders come from settings, not the agent
     call("docx_tracked_edit", {"path": str(files["docx"]), "find": "within 30 days", "replace": "within 45 days"})
     asked = call("office_desk", {"action": "needs_you", "note": "Should the notice period change too?"})
     assert asked["workstream"]["note"] == "Should the notice period change too?"

@@ -14,7 +14,7 @@ class PolicyRefusal(OfficeError):
 
 class OutsideDeskError(PolicyRefusal):
     reason = "outside_desk"
-    hint = "Only files inside a Desk folder can be edited. Ask the user, then office_desk action=add_folder path=<folder>."
+    hint = "Only files inside a Desk folder can be edited. Ask the user to add the folder in the plugin settings."
 
 
 class UnsupportedFileError(PolicyRefusal):

@@ -13,11 +13,10 @@ def _schema(name: str, description: str, properties: dict[str, Any], required: l
 OFFICE_DESK_SCHEMA = _schema(
     "office_desk",
     "The user's Desk: folders the agent may edit Office files in, and workstreams (one per request) the user reviews. "
-    "list = folders + recent workstreams. add_folder only when the user asked for that folder. "
+    "list = folders + recent workstreams. Desk folders come from the plugin settings; the agent cannot add one. "
     "needs_you = hand the workstream to the user with a note (a question, or 'please review'). done = mark finished.",
     {
-        "action": {"type": "string", "enum": ["list", "add_folder", "remove_folder", "status", "needs_you", "done", "attach"]},
-        "path": {"type": "string", "description": "add_folder: absolute folder path."},
+        "action": {"type": "string", "enum": ["list", "remove_folder", "status", "needs_you", "done", "attach"]},
         "folder_id": {"type": "integer", "description": "remove_folder: folder id."},
         "workstream_id": _WS,
         "note": {"type": "string", "description": "needs_you/done: one or two sentences for the user."},
@@ -59,7 +58,7 @@ DOCX_TRACKED_EDIT_SCHEMA = _schema(
         "replace": {"type": "string", "description": "New text."},
         "nth": {"type": "integer", "description": "0-based occurrence when find appears more than once."},
         "match": {"type": "string", "enum": ["exact", "normalized"]},
-        "author": {"type": "string", "description": "Revision author shown in Word (default: the plugin setting Tracked-change author, Hermes unless changed)."},
+        "author": {"type": "string", "description": "Revision author shown in Word (default: the plugin setting Tracked-change author, usually the business name)."},
         "workstream_id": _WS,
     },
     ["path", "find", "replace"],
@@ -198,7 +197,8 @@ XLSX_EDIT_SCHEMA = _schema(
 XLSX_RECALC_SCHEMA = _schema(
     "xlsx_recalc",
     "Recalculate a workbook's formulas with LibreOffice and write the fresh cached values back (preserving the package). "
-    "Returns the values of the cells in read and any formula errors. Without LibreOffice it says so and changes nothing.",
+    "Returns the values of the cells in read and any formula errors. Where recalculation is unavailable it returns "
+    "recalculated=false, reason=recalc_unavailable and changes nothing.",
     {"path": _PATH, "read": {"type": "array", "items": {"type": "string"}, "description": "Cells to report, like Sheet!B8."}, "workstream_id": _WS},
     ["path"],
 )

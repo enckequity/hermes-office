@@ -42,6 +42,15 @@ def venv_home(tmp_path: Path) -> Path:
     return home
 
 
+def _with_desk_folder(home: Path, folder: Path) -> None:
+    """Desk folders come from the plugin settings; the agent cannot add one."""
+    (home / "config.yaml").write_text(
+        "plugins:\n  enabled:\n    - office-desk\n  entries:\n    office-desk:\n      settings:\n"
+        f"        folders:\n          - {json.dumps(str(folder))}\n",
+        encoding="utf-8",
+    )
+
+
 def _run(home: Path, code: str) -> subprocess.CompletedProcess:
     env = os.environ.copy()
     env["HERMES_HOME"] = str(home)
@@ -83,13 +92,13 @@ def test_tools_dispatch_through_the_real_registry(venv_home: Path, tmp_path: Pat
     demo = subprocess.run([str(_venv()), str(REPO / "scripts" / "make_demo_files.py"), str(files)], capture_output=True, text=True, check=True)
     assert demo.returncode == 0
     target = files / "Services Agreement.docx"
+    _with_desk_folder(venv_home, files)
     script = f"""
 import json
 from hermes_cli.plugins import discover_plugins
 discover_plugins(force=True)
 from tools.registry import registry
-raw = registry.dispatch("office_desk", {{"action": "add_folder", "path": {str(files)!r}}}, session_id="chat-1")
-add = json.loads(raw)
+add = {{"ok": True}}
 raw = registry.dispatch("docx_tracked_edit", {{"path": {str(target)!r}, "find": "within 30 days", "replace": "within 45 days"}}, session_id="chat-1")
 edit = json.loads(raw)
 import docx
