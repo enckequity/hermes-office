@@ -115,12 +115,12 @@ def recalc_xlsx(path: str | Path, *, read: list[str] | None = None, timeout: flo
     if soffice_path() is None:
         return {
             "recalculated": False,
-            "reason": "libreoffice_missing",
-            "hint": "Install LibreOffice (soffice) to recalculate; cached values are unchanged.",
+            "reason": "recalc_unavailable",
+            "hint": "Formula recalculation is not available here; the workbook and its cached values are unchanged.",
             "errors": scan_errors(_load(target)),
             "values": _read_values(target, read),
         }
-    workdir = Path(tempfile.mkdtemp(prefix=".hermes-office-recalc-", dir=str(target.parent)))
+    workdir = Path(tempfile.mkdtemp(prefix=".office-recalc-", dir=str(target.parent)))
     try:
         candidate = workdir / target.name
         result = oracle.recalc(str(target), output_path=str(candidate), timeout=timeout if timeout is not None else settings.recalc_timeout())

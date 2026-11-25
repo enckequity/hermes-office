@@ -144,7 +144,7 @@ def _hint_for_exception(exc: Exception) -> str:
     if isinstance(exc, StaleAnchorError):
         return "Refind the shape and retry."
     if isinstance(exc, OracleUnavailableError):
-        return "Install LibreOffice or pass a reachable soffice path."
+        return "Formula recalculation is not available here; nothing was changed."
     if isinstance(exc, OracleTimeoutError):
         return "Retry with a longer timeout."
     return "Check the request and try again."

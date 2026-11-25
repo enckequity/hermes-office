@@ -59,7 +59,7 @@ def conversation(session_id: str, *, limit: int = 200) -> dict[str, Any]:
     try:
         from hermes_state import SessionDB
     except ImportError:
-        return {"available": False, "reason": "Hermes session store is not importable in this process", "messages": []}
+        return {"available": False, "reason": "The session store is not importable in this process", "messages": []}
     try:
         db = SessionDB(read_only=True)
         rows = db.get_messages(session_id, include_ancestors=True)

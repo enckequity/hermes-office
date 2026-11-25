@@ -53,7 +53,7 @@ def test_recalc_refreshes_cached_values_with_libreoffice(files) -> None:
     assert out["values"]["Budget!F6"] == 164000
     assert out["values"]["Assumptions!B3"] == pytest.approx(164000 * 1.08)
     assert load_workbook(str(path))["Budget"]["F2"].value == "=SUM(B2:E2)"
-    assert not [p for p in path.parent.iterdir() if p.name.startswith(".hermes-office-recalc-")]
+    assert not [p for p in path.parent.iterdir() if p.name.startswith(".office-recalc-")]
 
 
 def test_diff_reports_changed_cells(files, tmp_path) -> None:
