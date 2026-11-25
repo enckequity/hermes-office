@@ -70,8 +70,8 @@ def test_preview_before_after_and_diff(client, files) -> None:
     out = call("docx_tracked_edit", {"path": str(path), "find": "within 30 days", "replace": "within 45 days"})
     after = client.get(f"{API}/preview", params={"path": str(path)}).json()
     runs = [run for p in after["docx"]["paragraphs"] for run in p["runs"]]
-    assert {"text": "30", "rev": "del", "author": "Hermes"} in runs
-    assert {"text": "45", "rev": "ins", "author": "Hermes"} in runs
+    assert {"text": "30", "rev": "del", "author": "Assistant"} in runs
+    assert {"text": "45", "rev": "ins", "author": "Assistant"} in runs
     payment = next(p for p in after["docx"]["paragraphs"] if any(r["text"] == "45" for r in p["runs"]))
     assert "".join(r["text"] for r in payment["runs"]).startswith("The Client will pay the fees in Schedule B. Payment is due within 3045 days")
     before = client.get(f"{API}/preview", params={"path": str(path), "receipt_id": out["receipt_id"]}).json()

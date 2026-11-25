@@ -51,7 +51,7 @@ def test_manifest_declares_every_setting_with_its_default() -> None:
 
 
 def test_defaults_without_hermes_context(hermes_home) -> None:
-    assert settings.default_author() == "Hermes"
+    assert settings.default_author() == "Assistant"
     assert settings.recalc_timeout() == 120.0
     assert settings.folders() == []
 
@@ -61,7 +61,7 @@ def test_values_from_context_and_bad_types_fall_back(hermes_home) -> None:
     assert settings.default_author() == "Legal Team"
     assert settings.recalc_timeout() == 30.0
     settings.bind(FakeCtx({"default_author": 7, "recalc_timeout": "soon", "folders": "not-a-list"}))
-    assert settings.default_author() == "Hermes"
+    assert settings.default_author() == "Assistant"
     assert settings.recalc_timeout() == 120.0
     assert settings.folders() == []
 

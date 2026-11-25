@@ -1,12 +1,12 @@
 """User settings for office-desk.
 
-They are declared in plugin.yaml ``config_schema``. Hermes builds the settings form from that schema
+They are declared in plugin.yaml ``config_schema``. The host builds the settings form from that schema
 (Desktop: Settings > Plugins > office-desk) and stores the values under
 ``plugins.entries.office-desk.settings`` in config.yaml. The plugin has no settings UI of its own.
 
 Inside the agent process the values are read through ``ctx.get_config``; the Desk backend routes
 have no plugin context, so they read the same config subtree through ``hermes_cli.config``.
-Without Hermes (plain pytest, scripts) every setting falls back to its schema default.
+Without the host (plain pytest, scripts) every setting falls back to its schema default.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULTS: dict[str, Any] = {
     "folders": [],
-    "default_author": "Hermes",
+    "default_author": "",
     "recalc_timeout": 120,
 }
 
@@ -75,9 +75,17 @@ def get(key: str) -> Any:
     return value
 
 
+# Used when no author is configured. Deployments set ``default_author`` to the business name.
+FALLBACK_AUTHOR = "Assistant"
+# The upstream default; a form that saved it unchanged must not put an engine name on documents.
+_RETIRED_AUTHORS = {"hermes"}
+
+
 def default_author() -> str:
-    author = get("default_author")
-    return author.strip() or DEFAULTS["default_author"]
+    author = get("default_author").strip()
+    if not author or author.casefold() in _RETIRED_AUTHORS:
+        return FALLBACK_AUTHOR
+    return author
 
 
 def recalc_timeout() -> float:

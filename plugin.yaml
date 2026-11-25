@@ -32,8 +32,8 @@ python_dependencies:
   - paper-pptx>=0.2.1,<0.3
   - paper-xlsx>=0.2.2,<0.3
 tags: [office, docx, pptx, xlsx, word, excel, powerpoint]
-# Settings live in Hermes Desktop under Settings > Plugins > office-desk (the gear on the
-# plugin's row in Capabilities > Plugins opens it). Hermes builds the form from this schema
+# Settings live under Settings > Plugins > office-desk (the gear on the
+# plugin's row in Capabilities > Plugins opens it). The host builds the form from this schema
 # and stores the values under plugins.entries.office-desk.settings in config.yaml.
 config_schema:
   folders:
@@ -43,9 +43,9 @@ config_schema:
     description: "Absolute paths of folders to keep on the Desk. The agent may only edit files inside a Desk folder. Folders you add from the Desk page are kept as well."
   default_author:
     type: str
-    default: "Hermes"
+    default: ""
     label: "Tracked-change author"
-    description: "Author name on Word tracked changes, comments and redlines when the agent does not give one."
+    description: "Author name on Word tracked changes, comments and redlines when the agent does not give one (normally the business name). Blank uses \"Assistant\"."
   recalc_timeout:
     type: int
     default: 120

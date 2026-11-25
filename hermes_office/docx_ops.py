@@ -13,8 +13,6 @@ from docx.search import find_one, find_text
 from . import settings
 from .guard import resolve_path
 
-DEFAULT_AUTHOR = "Hermes"
-
 _W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 

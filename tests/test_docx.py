@@ -93,7 +93,7 @@ def test_accept_with_bad_index_is_refused(files) -> None:
 
 def test_compare_builds_a_reviewable_redline(files, desk) -> None:
     original, revised = files["docx"], files["docx_v2"]
-    out = call("docx_redline_accept_reject", {"path": str(revised), "action": "compare", "compare_with": str(original), "author": "Hermes"})
+    out = call("docx_redline_accept_reject", {"path": str(revised), "action": "compare", "compare_with": str(original), "author": "Northwind Legal"})
     assert out["ok"] is True, out
     redline = Path(out["output_path"])
     assert redline.name == "Services Agreement (Client edits) (redline).docx"
